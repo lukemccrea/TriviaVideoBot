@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^1.4.1",
+    "axios": "^1.2.0",
+    "ffmpeg": "^0.0.4",
+    "ffprobe": "^1.1.2",
+    "google-auth-library": "^8.7.0",
+    "googleapis": "^109.0.1",
+    "puppeteer": "^19.3.0",
+    "videoshow": "^0.1.12"
+  },
+  "name": "triviabot",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukemccrea/TriviaBot.git"
+  },
+  "author": "Luke McCrea",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukemccrea/TriviaBot/issues"
+  },
+  "homepage": "https://github.com/lukemccrea/TriviaBot#readme"
+}

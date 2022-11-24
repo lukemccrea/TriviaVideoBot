@@ -1,0 +1,115 @@
+#!/usr/bin/env node
+
+var fs = require('fs')
+var videoshow = require('../')
+var version = require('../package.json').version
+
+var yargs = require('yargs')
+var argv = yargs
+  .usage('Create video slideshows easily from images with audio, subtitles and transitions\nUsage: $0 [options]')
+  .example('$0 -c config.json video.mp4', '')
+  .help('help').alias('help', 'h')
+  .version(version)
+  .alias('v', 'version')
+  .options({
+    config: {
+      alias: 'c',
+      description: 'File path to JSON config file',
+      required: true
+    },
+    audio: {
+      alias: 'a',
+      description: 'Optional audio file path'
+    },
+    subtitles: {
+      alias: 's',
+      description: 'Path to .srt subtitles file'
+    },
+    input: {
+      alias: 'i',
+      description: 'Add additional input to video'
+    },
+    output: {
+      alias: 'o',
+      description: 'Output video file path'
+    },
+    size: {
+      alias: 'x',
+      description: 'Video size resolution'
+    },
+    logo: {
+      alias: 'l',
+      description: 'Path to logo image'
+    },
+    debug: {
+      alias: 'd',
+      description: 'Enable debug mode in error case',
+      type: 'boolean'
+    }
+  })
+  .argv
+
+try {
+  render(options())
+} catch (e) {
+  error(e)
+}
+
+function render(opts) {
+  var output = argv.output || opts.output || getOutput()
+  var audio = argv.audio || opts.audio
+  var subtitles = argv.subtitles || opts.subtitles
+  var size = argv.size || opts.size
+  var logo = argv.logo || opts.logo
+  var loop = argv.loop || opts.loop
+
+  var video = videoshow(opts.images, opts.options)
+
+  if (audio) video.audio(audio)
+  if (subtitles) video.subtitles(subtitles)
+  if (size) video.size(size)
+  if (logo) video.logo(logo)
+  if (loop) video.loop(loop)
+
+  video
+    .save(output)
+    .on('error', error)
+    .on('start', function (command) {
+      if (argv.debug) {
+        echo('ffmpeg process started:', command)
+      }
+    })
+    .on('end', function () {
+      echo('Video created:', output)
+    })
+}
+
+function getOutput() {
+  var output = argv._.pop()
+  if (output && output[0] !== '-') {
+    return output
+  }
+  return 'video.mp4'
+}
+
+function options() {
+  var opts = {}
+  var config = JSON.parse(fs.readFileSync(argv.config))
+  if (config && (config.options || config.images)) {
+    opts = config
+  }
+  return opts
+}
+
+function error(msg) {
+  if (argv.debug && msg.stack) {
+    console.error(msg.stack || msg)
+  } else {
+    console.error(msg.message || msg)
+  }
+  process.exitCode = 1
+}
+
+function echo() {
+  console.log.apply(console, arguments)
+}
