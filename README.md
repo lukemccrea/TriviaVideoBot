@@ -3,7 +3,7 @@ Trivia Video Bot is a bot written in Javascript that makes 10 second Trivia vide
 
 # How to Use
 
-Simple run `node index.js` to make your video!
+Simply run `node index.js` to make your video!
 
 # Contributing
 We would love for you to contribute! Don't be shy! If you'd like to request a feature be added, open an issue and suggest it. We'd love to here from you!
